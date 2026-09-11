@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jongmin Park — 3D Vision &amp; Embodied AI</title>
+<meta name="description" content="Jongmin Park is a postdoctoral researcher at PI Lab, Seoul National University, working on dynamic 3D scene reconstruction, Gaussian splatting, and world action models for embodied agents.">
+<meta property="og:title" content="Jongmin Park">
+<meta property="og:description" content="Postdoctoral researcher, PI Lab, SNU. Dynamic 3D reconstruction and embodied AI.">
+<meta property="og:image" content="images/profile.jpg">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,400&family=Source+Sans+3:ital,wght@0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --paper:#F6F7F5;
+  --ink:#1B1F24;
+  --mid:#5B6470;
+  --rule:#DCE0DE;
+  --accent:#2851D6;
+  --accent-soft:#E8EDFB;
+  --display:"Fraunces", Georgia, serif;
+  --body:"Source Sans 3", -apple-system, "Segoe UI", sans-serif;
+  --measure:760px;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+body{
+  margin:0;background:var(--paper);color:var(--ink);
+  font-family:var(--body);font-size:17px;line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:var(--accent);text-decoration:none}
+a:hover{text-decoration:underline;text-underline-offset:3px}
+a:focus-visible,button:focus-visible{outline:2px solid var(--accent);outline-offset:3px;border-radius:2px}
+h1,h2,h3{font-family:var(--display);font-weight:500;line-height:1.15;margin:0}
+h2{font-size:1.75rem;margin-bottom:1.4rem}
+h3{font-size:1.15rem;font-weight:600}
+p{margin:0 0 1rem}
+.wrap{max-width:var(--measure);margin:0 auto;padding:0 24px}
+
+/* ---------- nav ---------- */
+.nav{
+  position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--paper) 88%,transparent);
+  backdrop-filter:blur(8px);border-bottom:1px solid var(--rule);
+}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;height:56px}
+.nav .brand{font-family:var(--display);font-size:1.1rem;color:var(--ink)}
+.nav ul{list-style:none;display:flex;gap:22px;margin:0;padding:0}
+.nav ul a{color:var(--mid);font-size:.95rem}
+.nav ul a:hover{color:var(--ink);text-decoration:none}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding:72px 0 128px;overflow:hidden}
+.hero .wrap{position:relative;display:grid;grid-template-columns:1fr 168px;gap:40px;align-items:start}
+.hero .role{color:var(--mid);font-size:1rem;margin-bottom:10px}
+.hero h1{font-size:clamp(2.6rem,7vw,4.2rem);letter-spacing:-.01em;margin-bottom:18px}
+.hero .lede{font-size:1.25rem;line-height:1.45;max-width:34ch;margin-bottom:26px}
+.hero .actions{display:flex;gap:12px;flex-wrap:wrap}
+.btn{
+  display:inline-block;padding:10px 18px;border-radius:6px;font-weight:500;font-size:.98rem;
+  border:1px solid var(--ink);color:var(--ink);background:transparent;
+}
+.btn:hover{text-decoration:none;background:var(--ink);color:var(--paper)}
+.btn.primary{background:var(--ink);color:var(--paper)}
+.btn.primary:hover{background:var(--accent);border-color:var(--accent)}
+.portrait{
+  width:168px;height:168px;object-fit:cover;border-radius:8px;
+  background:var(--rule);display:block;margin-top:14px;
+}
+/* the spline: one animated stroke, drawn once */
+.spline{
+  position:absolute;left:0;right:0;bottom:-6px;width:100%;height:120px;
+  pointer-events:none;
+}
+.spline path{
+  fill:none;stroke:var(--accent);stroke-width:1.5;
+  stroke-dasharray:2600;stroke-dashoffset:2600;
+  animation:draw 2.4s cubic-bezier(.4,0,.2,1) .2s forwards;
+}
+.spline circle{fill:var(--accent);opacity:0;animation:pop .5s ease-out forwards}
+.spline circle:nth-of-type(1){animation-delay:.5s}
+.spline circle:nth-of-type(2){animation-delay:.9s}
+.spline circle:nth-of-type(3){animation-delay:1.3s}
+.spline circle:nth-of-type(4){animation-delay:1.7s}
+.spline circle:nth-of-type(5){animation-delay:2.1s}
+.spline circle:nth-of-type(6){animation-delay:2.5s}
+@keyframes draw{to{stroke-dashoffset:0}}
+@keyframes pop{to{opacity:.55}}
+@media (prefers-reduced-motion:reduce){
+  .spline path{animation:none;stroke-dashoffset:0}
+  .spline circle{animation:none;opacity:.55}
+}
+
+/* ---------- sections ---------- */
+section{padding:56px 0;border-top:1px solid var(--rule)}
+.about p{max-width:62ch}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:32px 40px;margin-top:36px}
+.facts h3{margin-bottom:10px}
+.facts ul{list-style:none;padding:0;margin:0}
+.facts li{padding:4px 0;color:var(--mid)}
+.facts li strong{color:var(--ink);font-weight:500}
+.timeline li{display:grid;grid-template-columns:96px 1fr;gap:12px}
+.timeline .when{font-variant-numeric:tabular-nums;color:var(--mid)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips span{
+  padding:4px 11px;border-radius:999px;border:1px solid var(--rule);
+  font-size:.92rem;color:var(--ink);
+}
+.chips span.accent{background:var(--accent-soft);border-color:transparent;color:var(--accent)}
+
+/* ---------- publications ---------- */
+.pubhead{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:8px}
+.pubhead h2{margin:0}
+.filters{display:flex;gap:4px}
+.filters button{
+  font:inherit;font-size:.95rem;color:var(--mid);background:none;border:0;
+  padding:6px 10px;border-radius:6px;cursor:pointer;
+}
+.filters button:hover{color:var(--ink)}
+.filters button[aria-pressed="true"]{color:var(--ink);background:var(--accent-soft)}
+.note{color:var(--mid);font-size:.95rem;margin-bottom:24px}
+.pub{
+  display:grid;grid-template-columns:150px 1fr;gap:22px;
+  padding:22px 0;border-top:1px solid var(--rule);
+}
+.pub:last-child{border-bottom:1px solid var(--rule)}
+.pub[hidden]{display:none}
+.thumb{
+  width:150px;aspect-ratio:4/3;border-radius:6px;overflow:hidden;
+  background:var(--accent-soft);display:grid;place-items:center;
+}
+.thumb img{width:100%;height:100%;object-fit:cover;display:block}
+.thumb .mono{font-family:var(--display);font-size:1.3rem;color:var(--accent);font-style:italic}
+.venue{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:6px;font-size:.92rem;color:var(--mid)}
+.venue .tag{
+  padding:2px 9px;border-radius:4px;background:var(--ink);color:var(--paper);
+  font-weight:500;font-size:.85rem;
+}
+.venue .tag.hl{background:var(--accent)}
+.venue .tag.soft{background:var(--accent-soft);color:var(--accent)}
+.pub h3{margin-bottom:6px}
+.pub .authors{color:var(--mid);margin-bottom:8px;font-size:.98rem}
+.pub .authors b{color:var(--ink);font-weight:600}
+.pub .links{display:flex;gap:14px;flex-wrap:wrap;font-size:.95rem}
+.more{margin-top:20px}
+.more summary{cursor:pointer;color:var(--mid);list-style:none}
+.more summary::-webkit-details-marker{display:none}
+.more summary::before{content:"+ ";}
+.more[open] summary::before{content:"– ";}
+.more ul{margin:12px 0 0;padding-left:18px;color:var(--mid)}
+.more li{margin-bottom:8px}
+
+/* ---------- records (patents / awards) ---------- */
+.records{display:grid;grid-template-columns:1fr 1fr;gap:32px 40px}
+.records ul{list-style:none;margin:0;padding:0}
+.records li{display:grid;grid-template-columns:72px 1fr;gap:12px;padding:8px 0;border-top:1px solid var(--rule)}
+.records li:last-child{border-bottom:1px solid var(--rule)}
+.records .when{color:var(--mid);font-variant-numeric:tabular-nums}
+.records .sub{display:block;color:var(--mid);font-size:.92rem}
+
+/* ---------- cv & contact ---------- */
+.cv .wrap,.contact .wrap{display:grid;grid-template-columns:1fr 1fr;gap:32px 40px;align-items:start}
+.cv p,.contact p{color:var(--mid)}
+.contact ul{list-style:none;padding:0;margin:0}
+.contact li{padding:5px 0}
+footer{padding:36px 0 48px;color:var(--mid);font-size:.92rem}
+
+@media (max-width:640px){
+  .hero{padding:48px 0 96px}
+  .hero .wrap{grid-template-columns:1fr}
+  .portrait{order:-1;margin:0 0 8px;width:120px;height:120px}
+  .facts,.records,.cv .wrap,.contact .wrap{grid-template-columns:1fr}
+  .pub{grid-template-columns:1fr}
+  .thumb{width:100%;max-width:280px}
+  .nav ul{gap:14px}
+  .nav ul li:nth-child(3){display:none}
+}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="Site">
+  <div class="wrap">
+    <a class="brand" href="#top">Jongmin Park</a>
+    <ul>
+      <li><a href="#about">About</a></li>
+      <li><a href="#publications">Publications</a></li>
+      <li><a href="#records">Patents &amp; awards</a></li>
+      <li><a href="#cv">CV</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="hero" id="top">
+  <div class="wrap">
+    <div>
+      <p class="role">Postdoctoral Researcher, PI Lab, Seoul National University</p>
+      <h1>Jongmin Park</h1>
+      <p class="lede">I reconstruct dynamic 3D scenes from ordinary videos, and I'm now using those representations to help embodied agents understand and act in the world.</p>
+      <div class="actions">
+        <a class="btn primary" href="assets/Jongmin_Park_CV.pdf">Download CV</a>
+        <a class="btn" href="#publications">See publications</a>
+      </div>
+    </div>
+    <img class="portrait" src="images/profile.jpg" alt="Portrait of Jongmin Park" onerror="this.style.display='none'">
+  </div>
+  <!-- A single spline through six control points: the motif behind SplineGS and WebSpline. -->
+  <svg class="spline" viewBox="0 0 1200 150" preserveAspectRatio="none" aria-hidden="true">
+    <path d="M -20 120 C 120 40, 220 40, 330 95 S 520 150, 640 80 S 820 20, 960 70 S 1140 130, 1240 60"/>
+    <circle cx="80" cy="66" r="3"/>
+    <circle cx="330" cy="95" r="3"/>
+    <circle cx="520" cy="118" r="3"/>
+    <circle cx="640" cy="80" r="3"/>
+    <circle cx="820" cy="30" r="3"/>
+    <circle cx="960" cy="70" r="3"/>
+  </svg>
+</header>
+
+<main id="main">
+
+<section class="about" id="about">
+  <div class="wrap">
+    <h2>About</h2>
+    <p>I am a postdoctoral researcher at <a href="https://pi.snu.ac.kr/" rel="noopener">PI Lab</a>, Seoul National University, working with Prof. Youngjae Yu on world action models and vision-language-action models for embodied agents.</p>
+    <p>I received my Ph.D. in Electrical Engineering from KAIST in 2026, advised by <a href="https://scholar.google.com/citations?user=bGXte_4AAAAJ" rel="noopener">Prof. Munchurl Kim</a> at <a href="https://www.viclab.kaist.ac.kr/" rel="noopener">VICLAB</a>. My dissertation developed motion-adaptive spline representations for real-time dynamic 3D Gaussian splatting from monocular video. Earlier I worked on learned image compression with arbitrary-scale spatial scalability.</p>
+
+    <div class="facts">
+      <div>
+        <h3>Education</h3>
+        <ul class="timeline">
+          <li><span class="when">2022–2026</span><span><strong>Ph.D.</strong>, Electrical Engineering, KAIST</span></li>
+          <li><span class="when">2020–2022</span><span><strong>M.S.</strong>, Electrical Engineering, KAIST</span></li>
+          <li><span class="when">2015–2020</span><span><strong>B.S.</strong>, Electrical Engineering, KAIST</span></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Published at</h3>
+        <div class="chips">
+          <span>CVPR</span><span>ICCV</span><span>AAAI</span><span>IEEE TPAMI</span>
+        </div>
+        <h3 style="margin-top:28px">Research interests</h3>
+        <div class="chips">
+          <span>Dynamic 3D reconstruction</span><span>Feed-forward 3D Gaussian splatting</span>
+          <span class="accent">World action models</span><span class="accent">Vision-language-action models</span>
+        </div>
+        <h3 style="margin-top:28px">Tools</h3>
+        <div class="chips">
+          <span>Python</span><span>PyTorch</span><span>CUDA</span><span>C</span><span>MATLAB</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section id="publications">
+  <div class="wrap">
+    <div class="pubhead">
+      <h2>Publications</h2>
+      <div class="filters" role="group" aria-label="Filter publications">
+        <button type="button" data-filter="all" aria-pressed="true">All</button>
+        <button type="button" data-filter="conference" aria-pressed="false">Conference</button>
+        <button type="button" data-filter="journal" aria-pressed="false">Journal</button>
+        <button type="button" data-filter="preprint" aria-pressed="false">Preprint</button>
+      </div>
+    </div>
+    <p class="note">* equal contribution</p>
+
+    <div class="publist">
+
+      <article class="pub" data-type="preprint">
+        <div class="thumb"><img src="images/webspline.png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'mono',textContent:'∿'}))"></div>
+        <div>
+          <div class="venue"><span class="tag soft">Preprint</span><span>arXiv, June 2026 · under review</span></div>
+          <h3>WebSpline: Structure-Informed Splines for Real-Time 3D Gaussians from Monocular Videos</h3>
+          <p class="authors"><b>Jongmin Park*</b>, Jeonghwan Yun*, Minh-Quan Viet Bui, Munchurl Kim</p>
+          <div class="links"><a href="https://arxiv.org/abs/2606.02096" rel="noopener">arXiv</a></div>
+        </div>
+      </article>
+
+      <article class="pub" data-type="conference">
+        <div class="thumb"><img src="images/ecosplat.png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'mono',textContent:'Eco'}))"></div>
+        <div>
+          <div class="venue"><span class="tag">CVPR 2026</span><span class="tag hl">Highlight</span><span>top 3.6% of 16,092 submissions</span></div>
+          <h3>EcoSplat: Efficiency-controllable Feed-forward 3D Gaussian Splatting from Multi-view Images</h3>
+          <p class="authors"><b>Jongmin Park*</b>, Minh-Quan Viet Bui*, Juan Luis Gonzalez Bello, Jaeho Moon, Jihyong Oh, Munchurl Kim</p>
+          <div class="links">
+            <a href="https://arxiv.org/abs/2512.18692" rel="noopener">arXiv</a>
+            <a href="https://kaist-viclab.github.io/ecosplat-site/" rel="noopener">Project page</a>
+            <a href="https://github.com/KAIST-VICLab/EcoSplat" rel="noopener">Code</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="pub" data-type="conference">
+        <div class="thumb"><img src="images/mobgs.png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'mono',textContent:'MoBGS'}))"></div>
+        <div>
+          <div class="venue"><span class="tag">AAAI 2026</span><span>acceptance rate 17.6%</span></div>
+          <h3>MoBGS: Motion Deblurring Dynamic 3D Gaussian Splatting for Blurry Monocular Video</h3>
+          <p class="authors">Minh-Quan Viet Bui*, <b>Jongmin Park*</b>, Juan Luis Gonzalez Bello, Jaeho Moon, Jihyong Oh, Munchurl Kim</p>
+          <div class="links">
+            <a href="https://arxiv.org/abs/2504.15122" rel="noopener">arXiv</a>
+            <a href="https://kaist-viclab.github.io/mobgs-site/" rel="noopener">Project page</a>
+            <a href="https://github.com/KAIST-VICLab/MoBGS" rel="noopener">Code</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="pub" data-type="conference">
+        <div class="thumb"><img src="images/splinegs.png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'mono',textContent:'∿'}))"></div>
+        <div>
+          <div class="venue"><span class="tag">CVPR 2025</span><span>acceptance rate 22.1%</span></div>
+          <h3>SplineGS: Robust Motion-Adaptive Spline for Real-Time Dynamic 3D Gaussians from Monocular Video</h3>
+          <p class="authors"><b>Jongmin Park*</b>, Minh-Quan Viet Bui*, Juan Luis Gonzalez Bello, Jaeho Moon, Jihyong Oh, Munchurl Kim</p>
+          <div class="links">
+            <a href="https://arxiv.org/abs/2412.09982" rel="noopener">arXiv</a>
+            <a href="https://kaist-viclab.github.io/splinegs-site/" rel="noopener">Project page</a>
+            <a href="https://github.com/KAIST-VICLab/SplineGS" rel="noopener">Code</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="pub" data-type="journal">
+        <div class="thumb"><img src="images/moblurf.png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'mono',textContent:'RF'}))"></div>
+        <div>
+          <div class="venue"><span class="tag">IEEE TPAMI 2025</span><span>vol. 47, no. 9, pp. 7752–7770</span></div>
+          <h3>MoBluRF: Motion Deblurring Neural Radiance Fields for Blurry Monocular Video</h3>
+          <p class="authors">Minh-Quan Viet Bui*, <b>Jongmin Park*</b>, Jihyong Oh, Munchurl Kim</p>
+          <div class="links">
+            <a href="https://arxiv.org/abs/2312.13528" rel="noopener">arXiv</a>
+            <a href="https://kaist-viclab.github.io/dyblurf-site/" rel="noopener">Project page</a>
+            <a href="https://github.com/KAIST-VICLab/MoBluRF" rel="noopener">Code</a>
+            <a href="https://huggingface.co/datasets/ImJongminPark/BlurryIPhone" rel="noopener">Dataset</a>
+          </div>
+        </div>
+      </article>
+
+      <article class="pub" data-type="conference">
+        <div class="thumb"><img src="images/compass.png" alt="" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'mono',textContent:'⊕'}))"></div>
+        <div>
+          <div class="venue"><span class="tag">ICCV 2023</span><span>acceptance rate 25.0%</span></div>
+          <h3>COMPASS: High-Efficiency Deep Image Compression with Arbitrary-scale Spatial Scalability</h3>
+          <p class="authors"><b>Jongmin Park</b>, Jooyoung Lee, Munchurl Kim</p>
+          <div class="links">
+            <a href="https://arxiv.org/abs/2309.07926" rel="noopener">arXiv</a>
+            <a href="https://kaist-viclab.github.io/compass-site/" rel="noopener">Project page</a>
+            <a href="https://github.com/KAIST-VICLab/COMPASS" rel="noopener">Code</a>
+          </div>
+        </div>
+      </article>
+
+    </div>
+
+    <details class="more">
+      <summary>Workshop and domestic publications</summary>
+      <ul>
+        <li>C. O. Ancuti, C. Ancuti, F.-A. Vasluianu, R. Timofte, and 48 others including <b>J. Park</b>. NTIRE 2020 Challenge on NonHomogeneous Dehazing. CVPR Workshops, 2020.</li>
+        <li><b>J. Park</b>, M. Kim. Transformer-based Image Compression Framework of Spatial Scalability. KIBME Workshops, 2023.</li>
+        <li><b>J. Park</b>, G. Youk, M. Kim. SAR Image Target Detection based on Attention YOLOv4. Journal of KIMST, vol. 25, no. 5, 2022.</li>
+      </ul>
+    </details>
+  </div>
+</section>
+
+<section id="records">
+  <div class="wrap">
+    <h2>Patents &amp; awards</h2>
+    <div class="records">
+      <div>
+        <h3 style="margin-bottom:12px">Patents</h3>
+        <ul>
+          <li><span class="when">2025</span><span>Curve Model Based Rendering Method and Apparatus for Performing the Same <span class="sub">KR10-2025-0189396, filed</span></span></li>
+          <li><span class="when">2024</span><span>Method, Apparatus and Recording Medium for Encoding/Decoding Image <span class="sub">KR10-2024-0071361, filed</span></span></li>
+          <li><span class="when">2023</span><span>Method and Apparatus for Image Translation Using Latent Features of Image <span class="sub">KR10-2563953, registered</span></span></li>
+        </ul>
+      </div>
+      <div>
+        <h3 style="margin-bottom:12px">Awards &amp; scholarships</h3>
+        <ul>
+          <li><span class="when">2026</span><span>CVPR Highlight paper (EcoSplat)</span></li>
+          <li><span class="when">2023</span><span>Best Paper Award (Chang-kyu Park Academic Award) <span class="sub">Korea Institute of Military Science and Technology</span></span></li>
+          <li><span class="when">2023</span><span>Outstanding Paper Award <span class="sub">Korea Institute of Broadcast and Media Engineers</span></span></li>
+          <li><span class="when">2020–26</span><span>Government Scholarship for M.S. and Ph.D. studies</span></li>
+          <li><span class="when">2015–20</span><span>National Scholarship for B.S. studies</span></li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="cv" id="cv">
+  <div class="wrap">
+    <div>
+      <h2>Curriculum vitae</h2>
+      <p>Education, publications, research projects, and patents in one PDF. Last updated September 2026.</p>
+    </div>
+    <div class="actions" style="display:flex;gap:12px;flex-wrap:wrap;padding-top:8px">
+      <a class="btn primary" href="assets/Jongmin_Park_CV.pdf">Download CV</a>
+      <a class="btn" href="assets/Jongmin_Park_CV.pdf" target="_blank" rel="noopener">Open in browser</a>
+    </div>
+  </div>
+</section>
+
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div>
+      <h2>Contact</h2>
+      <p>I'm happy to talk about collaborations on dynamic 3D reconstruction, feed-forward Gaussian splatting, or embodied AI.</p>
+      <p><a href="mailto:jm.park@snu.ac.kr">jm.park@snu.ac.kr</a></p>
+    </div>
+    <div>
+      <h3 style="margin-bottom:10px">Elsewhere</h3>
+      <ul>
+        <li><a href="https://scholar.google.com/citations?user=PWio4eYAAAAJ" rel="noopener">Google Scholar</a></li>
+        <li><a href="https://github.com/ImJongminPark" rel="noopener">GitHub</a></li>
+        <li><a href="https://www.linkedin.com/in/jongminpark-03b757296/" rel="noopener">LinkedIn</a></li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap">Jongmin Park, 2026.</div>
+</footer>
+
+<script>
+(function(){
+  var buttons=document.querySelectorAll('.filters button');
+  var pubs=document.querySelectorAll('.pub');
+  buttons.forEach(function(b){
+    b.addEventListener('click',function(){
+      var f=b.dataset.filter;
+      buttons.forEach(function(x){x.setAttribute('aria-pressed',x===b?'true':'false');});
+      pubs.forEach(function(p){p.hidden=!(f==='all'||p.dataset.type===f);});
+    });
+  });
+})();
+</script>
+</body>
+</html>
